@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from transformers import BertTokenizer, BertForSequenceClassification, BertConfig
+from transformers import BertForSequenceClassification, BertConfig
 from pydantic import BaseModel
 import os
 import torch
