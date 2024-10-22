@@ -5,9 +5,16 @@ from pydantic import BaseModel
 import os
 import torch
 import pickle
+import uvicorn
 
 # Inicializar o FastAPI
 app = FastAPI()
+
+# Teste de Rota Inicial
+@app.get("/")
+def read_root():
+    return {"mensagem": "Backend está funcionando!"}
+
 
 # Configurar CORS para permitir comunicação com o frontend
 app.add_middleware(
@@ -69,13 +76,6 @@ model = BertForSequenceClassification(config)
 # Carregar os pesos do modelo salvo em .pth
 model.load_state_dict(torch.load('modelos/modelo.pth', map_location=device))
 
-
-
-
-
-
-
-
 # Função para previsão
 def prever_noticia(texto):
     inputs = tokenizer(texto, return_tensors="pt", truncation=True, padding=True, max_length=512).to(device)
@@ -99,8 +99,8 @@ async def predict(request: Request):
     resultado = prever_noticia(texto)
     return resultado
 
-# Teste de Rota Inicial
-@app.get("/")
-def read_root():
-    return {"mensagem": "Backend está funcionando!"}
 
+# Função principal para iniciar o servidor
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # Captura a variável de ambiente PORT
+    uvicorn.run(app, host="0.0.0.0", port=port)
